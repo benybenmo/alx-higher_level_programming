@@ -1,41 +1,23 @@
 #!/usr/bin/python3
-"""Log parsing script."""
-import sys
-
-total_size = 0
-codes = {'200': 0, '301': 0, '400': 0, '401': 0,
-         '403': 0, '404': 0, '405': 0, '500': 0}
-iteration = 0
+'''Module for Student class.'''
 
 
-def print_stats():
-    """Function that prints a resume of the stats."""
-    print("File size: {}".format(total_size))
-    for k, v in sorted(codes.items()):
-        if v is not 0:
-            print("{}: {}".format(k, v))
+class Student:
+    '''Class for jsonification.'''
+    def __init__(self, first_name, last_name, age):
+        '''Constructor.'''
+        self.first_name = first_name
+        self.last_name = last_name
+        self.age = age
 
+    def to_json(self, attrs=None):
+        '''Retrieves dictionary with filter.'''
+        if type(attrs) is list and all([type(x) == str for x in attrs]):
+            return {k: v for k, v in self.__dict__.items() if k in attrs}
+        else:
+            return self.__dict__.copy()
 
-try:
-    for line in sys.stdin:
-        line = line.split()
-        if len(line) >= 2:
-            tmp = iteration
-            if line[-2] in codes:
-                codes[line[-2]] += 1
-                iteration += 1
-            try:
-                total_size += int(line[-1])
-                if tmp == iteration:
-                    iteration += 1
-            except:
-                if tmp == iteration:
-                    continue
-
-        if iteration % 10 == 0:
-            print_stats()
-
-    print_stats()
-
-except KeyboardInterrupt:
-    print_stats()
+    def reload_from_json(self, json):
+        '''Loads attributes from json.'''
+        for key, value in json.items():
+            self.__dict__[key] = value
