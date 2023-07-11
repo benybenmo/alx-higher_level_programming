@@ -1,10 +1,17 @@
 #!/usr/bin/python3
-"""This is the documentation for this module. On this file we have to
-write a JSON rep of an object to a file"""
+"""Function declaration"""
 
 
-def save_to_json_file(my_obj, filename):
-    with open(filename, 'w') as archivito:
-        import json
-        atta = json.dumps(my_obj)
-        archivito.write(atta)
+import json
+import sys
+save_to_json_file = __import__('5-save_to_json_file').save_to_json_file
+load_from_json_file = __import__('6-load_from_json_file').load_from_json_file
+
+try:
+    arguments = load_from_json_file("add_item.json")
+except FileNotFoundError:
+    arguments = []
+
+for i in range(1, len(sys.argv)):
+    arguments += [sys.argv[i]]
+save_to_json_file(arguments, "add_item.json")
